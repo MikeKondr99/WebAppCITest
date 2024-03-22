@@ -2,13 +2,12 @@ name: .NET with Coverage
 
 on:
  push:
-    branches: [ "main", "develop" ]
+    branches: [ "main" ]
  pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "main" ]
 
 jobs:
  build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +18,8 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
+    - name: Install Coverlet Collector
+      run: dotnet tool install --global coverlet.collector
     - name: Build
       run: dotnet build --no-restore
     - name: Test with Coverage

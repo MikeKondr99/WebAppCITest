@@ -9,7 +9,7 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
- setup:
+ build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -17,20 +17,8 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-
- restore:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
     - name: Restore dependencies
       run: dotnet restore
-
- build:
-    needs: restore
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
     - name: Build
       run: dotnet build --no-restore
     - name: Archive build artifacts

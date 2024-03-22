@@ -25,34 +25,30 @@ jobs:
     - uses: actions/checkout@v4
     - name: Restore dependencies
       run: dotnet restore
-    - name: Save NuGet packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
 
  build:
     needs: restore
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Restore NuGet packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
     - name: Build
       run: dotnet build --no-restore
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: ./
 
  test-coverage:
     needs: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+        path: ./
     - name: Test with Coverage
       uses: b3b00/coverlet-action@1.2.5
       with:

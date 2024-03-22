@@ -26,5 +26,6 @@ jobs:
         testProject: 'WebAppTests/WebAppTests.csproj'
         output: 'lcov.info'
         outputFormat: 'lcov'
+        outputDirectory: '.' 
         excludes: '[program]*,[test]test.*'
         threshold: 90

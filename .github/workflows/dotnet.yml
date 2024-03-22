@@ -19,7 +19,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: |
+        dotnet build --no-restore
+        echo "Build completed successfully."
     - name: Test with Coverage
       uses: b3b00/coverlet-action@1.2.5
       with:

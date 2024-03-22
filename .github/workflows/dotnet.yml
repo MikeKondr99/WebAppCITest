@@ -18,12 +18,13 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Install Coverlet Collector
-      run: dotnet tool install --global coverlet.collector
     - name: Build
       run: dotnet build --no-restore
     - name: Test with Coverage
-      run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/
-    - name: Check Coverage
-      run: |
-        coverlet ./TestResults/coverage.cobertura.xml --threshold 90
+      uses: b3b00/coverlet-action@1.2.5
+      with:
+        testProject: 'myProjectTests/myProjectTests.csproj'
+        output: 'lcov.info'
+        outputFormat: 'lcov'
+        excludes: '[program]*,[test]test.*'
+        threshold: 90

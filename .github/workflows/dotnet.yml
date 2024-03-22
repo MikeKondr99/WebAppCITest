@@ -25,7 +25,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: build-artifacts
-        path: ./
+        path: ./build-artifacts
 
  test-coverage:
     needs: build
@@ -35,8 +35,8 @@ jobs:
     - name: Download build artifacts
       uses: actions/download-artifact@v3
       with:
-        name: build-artifacts
-        path: ./
+         name: build-artifacts
+         path: ./build-artifacts
     - name: Test with Coverage
       uses: b3b00/coverlet-action@1.2.5
       with:

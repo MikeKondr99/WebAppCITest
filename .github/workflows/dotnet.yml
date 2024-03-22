@@ -1,27 +1,44 @@
-name: .NET with Coverage
+
+
+name: .NET Build and Coverage
 
 on:
  push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
  pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
 
 jobs:
- build:
+ setup:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
+ restore:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
     - name: Restore dependencies
       run: dotnet restore
+
+ build:
+    needs: restore
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
     - name: Build
-      run: |
-        dotnet build --no-restore
-        echo "Build completed successfully."
+      run: dotnet build --no-restore
+
+ test-coverage:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
     - name: Test with Coverage
       uses: b3b00/coverlet-action@1.2.5
       with:
@@ -31,3 +48,4 @@ jobs:
         outputDirectory: '.' 
         excludes: '[program]*,[test]test.*'
         threshold: 90
+      

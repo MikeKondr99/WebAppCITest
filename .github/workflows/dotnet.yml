@@ -23,7 +23,7 @@ jobs:
     - name: Test with Coverage
       uses: b3b00/coverlet-action@1.2.5
       with:
-        testProject: 'myProjectTests/myProjectTests.csproj'
+        testProject: 'WebAppTests/WebAppTests.csproj'
         output: 'lcov.info'
         outputFormat: 'lcov'
         excludes: '[program]*,[test]test.*'

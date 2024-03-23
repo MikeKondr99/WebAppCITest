@@ -37,3 +37,18 @@ jobs:
     - name: Unit Testing
       run: dotnet test -c Debug -p:coverletOutput=lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov WebAppTests/WebAppTests.csproj
 
+ coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Check coverage
+      run: |
+        COVERAGE=$(grep '^LF:' lcov.info | awk '{print $2}')
+        if (( $(echo "$COVERAGE < 90" | bc -l) )); then
+          echo "Coverage is below 90%: $COVERAGE%"
+          exit 1
+        else
+          echo "Coverage is above 90%: $COVERAGE%"
+        fi
+

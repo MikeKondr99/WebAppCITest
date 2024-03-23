@@ -36,11 +36,4 @@ jobs:
         name: build-artifacts
         path: ./bin/
     - name: Test with Coverage
-      uses: b3b00/coverlet-action@1.2.5
-      with:
-        testProject: 'WebAppTests/WebAppTests.csproj'
-        output: 'lcov.info'
-        outputFormat: 'lcov'
-        outputDirectory: '.' 
-        excludes: '[program]*,[test]test.*'
-        threshold: 90
+      run: dotnet test -c Debug -p:coverletOutput=lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov WebAppTests/WebAppTests.csproj

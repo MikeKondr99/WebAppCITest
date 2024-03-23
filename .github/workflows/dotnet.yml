@@ -1,4 +1,4 @@
-name: .NET Build and Coverage
+name: WebApp
 
 on:
  push:
@@ -31,7 +31,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: lcov-info
-        path: lcov.info
+        path: ./WebAppTests/lcov.info
 
  coverage:
     needs: test
@@ -42,7 +42,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: lcov-info
-        path: ./
+        path: ./WebAppTests/lcov.info
     - name: Check Coverage
       run: |
         coverage=$(grep -oP '^\s*LF:.*' lcov.info | awk '{print $2}')

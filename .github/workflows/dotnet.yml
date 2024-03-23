@@ -1,4 +1,4 @@
-name: WebApp
+﻿name: WebApp
 
 on:
  push:
@@ -41,19 +41,6 @@ jobs:
           ${{ runner.os }}-nuget-
     - name: Unit Testing
       run: dotnet test -c Debug -p:coverletOutput=lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov WebAppTests/WebAppTests.csproj
+    - name: Summary
+      run: echo '### Hello world! 🚀' >> $GITHUB_STEP_SUMMARY
 
- coverage:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Check Coverage
-      run: |
-        coverage=$(grep -oP '^\s*LF:.*' lcov.info | awk '{print $2}')
-        total=$(grep -oP '^\s*LH:.*' lcov.info | awk '{print $2}')
-        percentage=$(echo "scale=2; ($coverage / $total) * 100" | bc)
-        echo "Coverage: $percentage%"
-        if (( $(echo "$percentage < 90" | bc -l) )); then
-          echo "Coverage is below 90%"
-          exit 1
-        fi

@@ -44,7 +44,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Check coverage
       run: |
-        COVERAGE=$(grep '^LF:' lcov.info | awk '{print $2}')
+        COVERAGE=$(grep '^LF:' ./WebAppTests/lcov.info | awk '{print $2}')
         if (( $(echo "$COVERAGE < 90" | bc -l) )); then
           echo "Coverage is below 90%: $COVERAGE%"
           exit 1

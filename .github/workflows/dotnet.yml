@@ -38,11 +38,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Download lcov.info
-      uses: actions/download-artifact@v3
-      with:
-        name: lcov-info
-        path: ./WebAppTests/lcov.info
     - name: Check Coverage
       run: |
         coverage=$(grep -oP '^\s*LF:.*' lcov.info | awk '{print $2}')

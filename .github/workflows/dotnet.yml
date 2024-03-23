@@ -7,6 +7,7 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
+
  build:
     runs-on: ubuntu-latest
     steps:
@@ -15,32 +16,23 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Cache .NET NuGet packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+
+ format:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run dotnet format
+      run: dotnet format --no-restore --verify-no-changes
 
  test:
     needs: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Cache .NET NuGet packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
     - name: Unit Testing
       run: dotnet test -c Debug -p:coverletOutput=lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov WebAppTests/WebAppTests.csproj
-    - name: Summary
-      run: echo '### Hello world! 🚀' >> $GITHUB_STEP_SUMMARY
 

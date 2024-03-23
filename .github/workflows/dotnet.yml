@@ -27,11 +27,6 @@ jobs:
     - uses: actions/checkout@v4
     - name: Unit Testing
       run: dotnet test -c Debug -p:coverletOutput=lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov WebAppTests/WebAppTests.csproj
-    - name: Upload lcov.info as Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: lcov-info
-        path: ./WebAppTests/lcov.info
 
  coverage:
     needs: test

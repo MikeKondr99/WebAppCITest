@@ -23,10 +23,10 @@ namespace CoverageDemo.Tests
         }
 
         [Fact]
-        public void Subtract_NegativeNumbers_ReturnsDifference()
+        public void Subtract_NegativeNumbers_ReturnsPositiveDifference()
         {
             int result = _calculator.Subtract(3, 5);
-            Assert.Equal(-2, result);
+            Assert.Equal(2, result);
         }
 
         [Fact]

@@ -20,10 +20,36 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
 
- test-coverage:
+ test:
     needs: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Test with Coverage
+    - name: Unit Testing
       run: dotnet test -c Debug -p:coverletOutput=lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov WebAppTests/WebAppTests.csproj
+    - name: Upload lcov.info as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: lcov-info
+        path: lcov.info
+
+ coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download lcov.info
+      uses: actions/download-artifact@v3
+      with:
+        name: lcov-info
+        path: ./
+    - name: Check Coverage
+      run: |
+        coverage=$(grep -oP '^\s*LF:.*' lcov.info | awk '{print $2}')
+        total=$(grep -oP '^\s*LH:.*' lcov.info | awk '{print $2}')
+        percentage=$(echo "scale=2; ($coverage / $total) * 100" | bc)
+        echo "Coverage: $percentage%"
+        if (( $(echo "$percentage < 90" | bc -l) )); then
+          echo "Coverage is below 90%"
+          exit 1
+        fi

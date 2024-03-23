@@ -15,6 +15,13 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Cache .NET NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -25,8 +32,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Cache .NET NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
     - name: Unit Testing
-      run: dotnet test -c Debug -p:coverletOutput=lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov WebAppTests/WebAppTests.csproj
+      run: dotnet test --no-restore -c Debug -p:coverletOutput=lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov WebAppTests/WebAppTests.csproj
 
  coverage:
     needs: test
